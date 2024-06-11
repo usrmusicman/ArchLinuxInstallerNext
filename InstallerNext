@@ -1,0 +1,131 @@
+#!/bin/sh
+
+# Make sure to run the script as root
+if [[ "$USER" == "root" ]]; then
+    InitializeSetupRun=True
+    while [[ $InitializeSetupRun == True ]]
+        do
+
+        ## Set System Drive
+        clear
+        echo "Choose System Disk..."
+        echo ""
+        lsblk -o MODEL,PATH,SIZE,TYPE | grep "disk"
+        echo ""
+        read -p "Choose disk for the system install (i.e. /dev/sda): " SYSTEM_DRIVE
+
+        ## Set System Boot Partition
+        clear
+        echo "Choose Boot Partition..."
+        echo ""
+        lsblk -o PATH,SIZE,TYPE $SYSTEM_DRIVE | grep "part"
+        echo ""
+        read -p "Choose partition for the boot loader (i.e. /dev/sda1): " SYSTEM_BOOT
+
+        ## Set System Root Partition
+        clear
+        echo "Choose Root Partition..."
+        echo ""
+        lsblk -o PATH,SIZE,TYPE $SYSTEM_DRIVE | grep "part"
+        echo ""
+        read -p "Choose partition for the root filesystem (i.e. /dev/sda2): " SYSTEM_ROOT
+
+        ## Choose Mountpoint
+        clear
+        read -p "Choose the absoulte path for the mountpoint directory (i.e. /mnt): " MOUNT_DIR
+
+        ## Set User Credentials
+        clear
+        read -p "Type in a hostname: " HOSTNAME
+        read -p "Type in a username: " USERNAME
+        read -p "Type in a password: "$'' -s PASSWORD
+
+        ## Set System Locale
+        clear
+        echo "Choose Locale..."
+        sleep 3
+        cat /etc/locale.gen | grep "UTF-8" | cut -d " " -f 1 | cut -d "." -f 1 | cut -d "#" -f 2 | less
+        clear
+        read -p "Type in a system locale (i.e en_US): " LOCALE
+
+        ## Set Timezone
+        clear
+        echo "Choose Timezone..."
+        sleep 3
+        timedatectl list-timezones | less
+        clear
+        read -p "Type in a system timezone (i.e America/New_York): " TIMEZONE
+
+        ## Type in a name for your operating system and the linux kernel to install
+        clear
+        read -p "Type in an operating system name (i.e Archlinux): " OS_NAME
+        read -p "Type in the Linux kernel you want to install (i.e linux-zen): " KERNEL
+
+        ## OS UEFI entry
+        UEFI_NAME="${OS_NAME}_${KERNEL}"
+
+        ## CPU Microcode Install
+        loopInit=True
+        while [[ $loopInit == True ]]
+            do
+            clear
+            read -p "Type in the CPU name you have in your system (Options: amd, intel, other): " _CPU
+
+            # Check if a supported CPU is available
+            if [[ "${_CPU}" == "amd" ]]; then
+                loopInit=False
+            elif [[ "${_CPU}" == "intel" ]]; then
+                loopInit=False
+            elif [[ "${_CPU}" == "other" ]]; then
+                loopInit=False
+            fi
+        done
+
+        ## GPU Driver Installer
+        loopInit=True
+        while [[ $loopInit == True ]]
+            do
+            clear
+            read -p "Type in the GPU name you have in your system (Options: amd, intel, nvidia, other, virtualbox): " _GPU
+
+            # Check if a supported GPU is available
+            if [[ "${_GPU}" == "amd" ]]; then
+                loopInit=False
+            elif [[ "${_GPU}" == "intel" ]]; then
+                loopInit=False
+            elif [[ "${_GPU}" == "nvidia" ]]; then
+                loopInit=False
+            elif [[ "${_GPU}" == "other" ]]; then
+                loopInit=False
+            elif [[ "${_GPU}" == "virtualbox" ]]; then
+                loopInit=False
+            fi
+        done
+
+        # Exit the setup loop
+        InitializeSetupRun=False
+
+    done
+
+    # Get the Absolute Path
+    ABSOLUTE_PATH=$PWD
+
+    ## Choose Desktop Environment
+    DESK_CHOICE=True
+    while [[ $DESK_CHOICE == True ]]
+        do
+        clear
+        read -p "Choose a Desktop Environment or Window Manager (Options: cli, plasma): " DESKTOP_ENV
+
+        # Check which desktop you want to use
+        if [[ "${DESKTOP_ENV}" == "cli" ]]; then
+            source $ABSOLUTE_PATH/chainload/cli_install.sh
+            DESK_CHOICE=False
+        elif [[ "${DESKTOP_ENV}" == "plasma" ]]; then
+            source $ABSOLUTE_PATH/chainload/plasma_install.sh
+            DESK_CHOICE=False
+        fi
+    done
+else
+    echo "Please be root to run this script..."
+fi
