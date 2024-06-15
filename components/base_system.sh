@@ -1,7 +1,7 @@
 #!/bin/sh
 
 # BASE SYSTEM PACKAGE LIST
-BASE_SYSTEM="alsa-utils avahi bash-completion btrfs-progs dosfstools efibootmgr exfatprogs ffmpeg firewalld git gnu-free-fonts i2c-tools ${KERNEL} linux-firmware ${KERNEL}-headers man-db man-pages mkinitcpio mkinitcpio-firmware mtools multilib-devel net-tools networkmanager pipewire-alsa pipewire-audio pipewire-ffado pipewire-jack pipewire-pulse pipewire-session-manager pipewire-v4l2 plymouth pocl power-profiles-daemon realtime-privileges sshfs sudo udisks2 udisks2-btrfs vim vim-runtime wget wireless-regdb wireplumber zram-generator"
+BASE_SYSTEM="alsa-utils avahi bash-completion btrfs-progs dosfstools efibootmgr exfatprogs fastfetch ffmpeg firewalld git gnu-free-fonts i2c-tools ${KERNEL} linux-firmware ${KERNEL}-headers man-db man-pages mkinitcpio mkinitcpio-firmware mtools multilib-devel net-tools networkmanager pipewire-alsa pipewire-audio pipewire-ffado pipewire-jack pipewire-pulse pipewire-session-manager pipewire-v4l2 plymouth pocl power-profiles-daemon realtime-privileges sshfs sudo udisks2 udisks2-btrfs vim vim-runtime wget wireless-regdb wireplumber zram-generator"
 
 # Install Base System
 arch-chroot $MOUNT_DIR pacman -S --noconfirm $BASE_SYSTEM
@@ -57,3 +57,8 @@ arch-chroot $MOUNT_DIR systemctl enable avahi-daemon.service
 arch-chroot $MOUNT_DIR systemctl enable avahi-dnsconfd.service
 arch-chroot $MOUNT_DIR systemctl enable fstrim.timer
 arch-chroot $MOUNT_DIR systemctl enable NetworkManager.service
+
+# Install bash config files
+install -Dm644 $ABSOLUTE_PATH/skel/.bash_logout $MOUNT_DIR/etc/skel/.bash_logout
+install -Dm644 $ABSOLUTE_PATH/skel/.bash_profile $MOUNT_DIR/etc/skel/.bash_profile
+install -Dm644 $ABSOLUTE_PATH/skel/.bashrc $MOUNT_DIR/etc/skel/.bashrc
