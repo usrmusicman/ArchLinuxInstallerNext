@@ -46,9 +46,6 @@ install -Dm644 $ABSOLUTE_PATH/configs/base/i2c-dev.conf $MOUNT_DIR/etc/modules-l
 # Install ZRAM configuration
 install -Dm644 $ABSOLUTE_PATH/configs/base/zram-generator.conf $MOUNT_DIR/etc/systemd/zram-generator.conf
 
-# Install archlinux default icon
-install -Dm644 $ABSOLUTE_PATH/components/distributor-logo-archlinux.svg $MOUNT_DIR/usr/share/icons/distributor-logo-archlinux.svg
-
 # Generate filesystem mounts
 genfstab -U $MOUNT_DIR > $MOUNT_DIR/etc/fstab
 
