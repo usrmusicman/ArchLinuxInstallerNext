@@ -4,7 +4,7 @@
 BOOTENTRY_UUID=`lsblk $SYSTEM_ROOT -o UUID | tr "\n" " " | cut -d " " -f 2`
 
 # Boot commandline options
-BOOT_OPTIONS="cpufreq.default_governor=performance preempt=full root=UUID=$BOOTENTRY_UUID resume=UUID=$BOOTENTRY_UUID threadirqs usbcore.autosuspend=-1 quiet splash"
+BOOT_OPTIONS="preempt=full root=UUID=$BOOTENTRY_UUID resume=UUID=$BOOTENTRY_UUID threadirqs quiet splash"
 
 if [[ "${_CPU}" == "amd" ]]; then
     # Create EFIStub boot entry
