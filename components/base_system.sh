@@ -1,7 +1,7 @@
 #!/bin/sh
 
 # BASE SYSTEM PACKAGE LIST
-BASE_SYSTEM="alsa-utils avahi bash-completion btrfs-progs dosfstools efibootmgr exfatprogs fastfetch ffmpeg firewalld git gnu-free-fonts i2c-tools ${KERNEL} linux-firmware ${KERNEL}-headers man-db man-pages mkinitcpio mtools multilib-devel net-tools networkmanager pipewire-alsa pipewire-audio pipewire-ffado pipewire-jack pipewire-pulse pipewire-session-manager pipewire-v4l2 plymouth pocl power-profiles-daemon pulse-native-provider realtime-privileges sshfs sudo udisks2 udisks2-btrfs vim vim-runtime wget wireless-regdb wireplumber zram-generator"
+BASE_SYSTEM="alsa-utils avahi bash-completion btrfs-progs dosfstools efibootmgr exfatprogs fastfetch ffmpeg firewalld git gnu-free-fonts i2c-tools ${KERNEL} linux-firmware ${KERNEL}-headers man-db man-pages mkinitcpio mkinitcpio-firmware mtools multilib-devel net-tools networkmanager pipewire-alsa pipewire-audio pipewire-ffado pipewire-jack pipewire-pulse pipewire-session-manager pipewire-v4l2 plymouth pocl power-profiles-daemon pulse-native-provider realtime-privileges sshfs sudo udisks2 udisks2-btrfs vim vim-runtime wget wireless-regdb wireplumber zram-generator"
 
 # Install Base System
 arch-chroot $MOUNT_DIR pacman -S --noconfirm $BASE_SYSTEM
@@ -26,10 +26,10 @@ arch-chroot $MOUNT_DIR gpasswd -a $USERNAME wheel
 
 # Set system language
 sed -i -e "s/#${LOCALE}/${LOCALE}/" $MOUNT_DIR/etc/locale.gen
-arch-chroot $MOUNT_DIR locale-gen
 echo "LANGUAGE=${LOCALE}:${LOCALE/_*/}" > $MOUNT_DIR/etc/locale.conf
 echo "LC_ALL=C" >> $MOUNT_DIR/etc/locale.conf
 echo "LANG=${LOCALE}.UTF-8" >> $MOUNT_DIR/etc/locale.conf
+arch-chroot $MOUNT_DIR locale-gen
 
 # Set timezone and correct time
 arch-chroot $MOUNT_DIR ln -sf /usr/share/zoneinfo/$TIMEZONE /etc/localtime
